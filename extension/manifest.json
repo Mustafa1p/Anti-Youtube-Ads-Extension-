@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "IPTUBE X",
+  "description": "Blocks YouTube ad networks and removes residual ad UI so the challenge flag can be revealed.",
+  "version": "1.6",
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "scripting",
+    "activeTab",
+    "storage",
+    "browsingData"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://*.youtube.com/*",
+    "https://*.googlevideo.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["antiBot.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["storageSanitizer.js"],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    },
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["earlyPatch.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "youtube_rules",
+        "enabled": true,
+        "path": "rules/rules_1.json"
+      }
+    ]
+  },
+  "action": {
+    "default_title": "CTF YouTube Ad Blocker"
+  }
+}
